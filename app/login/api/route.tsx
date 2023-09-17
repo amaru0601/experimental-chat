@@ -4,7 +4,7 @@ import { cookies } from 'next/headers';
 export async function POST(request: Request) {
     const body = await request.json()
 
-    const res = await fetch('http://localhost:1323/login', {
+    const res = await fetch('http://localhost:8080/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -25,10 +25,10 @@ export async function POST(request: Request) {
     })
 }
 
-export async function GET(request: Request) {
+export async function GET() {
     const cookie = cookies().get('token')
     if (cookie) {
-        // YODO: verify token sign and ttl
+        // TODO: verify token sign and ttl
         return NextResponse.json({
             cookie: cookie,
         }, { status: 200 })
