@@ -1,43 +1,47 @@
-"use client"
+import HomeChat from '@/components/home';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
-import useJWT from "@/lib/use_jwt";
-import { useEffect, useState } from "react";
-
-const Home = () => {
-
-  const {jwt} = useJWT(null)
-  const [socket, setSocket] = useState<WebSocket | null>(null)
-
-  useEffect(() => {
-    const ws = new WebSocket('ws://localhost:8080/ws/create-chat?to=wizard_bit')
-    ws.onopen = () => {
-      console.log('WebSocket is connected.');
+async function getAuthorizationToken() {
+  const cookie = cookies().get('token')
+    if (cookie) {
+        console.log("EXISTE COOKIE")
+        // TODO: verify token sign and ttl
+        return cookie
+    } else {
+        return null
     }
-    ws.onmessage = (event) => {
-      console.log(event.data)
-    }
-    ws.onerror = (error) => {
-      console.error('WebSocket Error:', error);
-    }
-
-    ws.onclose = () => {
-      console.log('WebSocket is closed.');
-      setSocket(null);
-    }
-
-    setSocket(ws)
-
-    return () => {
-      ws.close();
-    };
-  }, [])
-
-  return (
-    <div>
-    <div>hello home</div>
-    <div>{jwt}</div>
-    </div>
-  )
 }
 
-export default Home;
+
+async function fetchChats() {
+  const response = await fetch('http://localhost:8080/api/chats',
+    {
+      headers: {
+        Cookie: cookies().toString()
+      }
+    }
+  )
+  const json = await response.json()
+  return json
+}
+
+const Home = async () => {
+  const data = await getAuthorizationToken().catch( e => console.error(e)) 
+  console.log("LAYOUT")
+  console.log(data)
+
+  if (data == null) {
+    redirect('/login')
+  }
+
+ 
+
+  const chats = await fetchChats().catch(e => console.error(e))
+  console.log(chats)
+
+  return <HomeChat chats={chats}></HomeChat>
+}
+
+export default Home
+
