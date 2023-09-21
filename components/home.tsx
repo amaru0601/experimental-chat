@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { HeaderMegaMenu } from "./header";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 interface Chat {
     id: number
@@ -12,6 +14,12 @@ interface HomeChatProps {
 }
 
 const HomeChat = (props: HomeChatProps) => {
+    const { data: session } = useSession()
+    
+    console.log("HOMECHAT", session)
+    if (session == null) {
+        redirect('/login')
+    }
 
     const [socket, setSocket] = useState<WebSocket | null>(null)
 

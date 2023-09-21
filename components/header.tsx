@@ -11,11 +11,23 @@ import {
 import { MantineLogo } from '@mantine/ds';
 import { useDisclosure } from '@mantine/hooks';
 import classes from './header.module.css';
+import { useRouter } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 
 
 
 export function HeaderMegaMenu() {
     const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
+    const router = useRouter()
+    
+    const handleLogout = async () => {
+        // TODO: improve error message
+
+        const res = await signOut({
+            callbackUrl:'/login',
+            redirect: true,
+        })
+    } 
 
     return (
         <Box pb={20}>
@@ -24,7 +36,7 @@ export function HeaderMegaMenu() {
                     <MantineLogo size={30} />
 
                     <Group visibleFrom="sm">
-                        <Button variant="default">Logout</Button>
+                        <Button variant="default" onClick={handleLogout}>Logout</Button>
                     </Group>
 
                     <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="sm" />
@@ -45,7 +57,7 @@ export function HeaderMegaMenu() {
                     <Divider my="sm" />
 
                     <Group justify="center" grow pb="xl" px="md">
-                        <Button variant="default">Logout</Button>
+                        <Button variant="default" onClick={handleLogout}>Logout</Button>
                     </Group>
                 </ScrollArea>
             </Drawer>
