@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { HeaderMegaMenu } from "./header";
+import ChatMessages  from "./chat";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
@@ -56,9 +57,7 @@ const HomeChat = (props: HomeChatProps) => {
     return (
         <>
             <HeaderMegaMenu ></HeaderMegaMenu>
-            <div>
-                <div>hello home</div>
-            </div>
+            <ChatMessages></ChatMessages>
         </>
     )
 }
