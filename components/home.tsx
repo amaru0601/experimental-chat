@@ -5,6 +5,7 @@ import { HeaderMegaMenu } from "./header";
 import ChatMessages  from "./chat";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import SendMessages from "./send";
 
 interface Chat {
     id: number
@@ -37,9 +38,6 @@ const HomeChat = (props: HomeChatProps) => {
         ws.onopen = () => {
             console.log('WebSocket is connected.');
         }
-        ws.onmessage = (event) => {
-            console.log(event.data)
-        }
         ws.onerror = (error) => {
             console.error('WebSocket Error:', error);
         }
@@ -57,7 +55,13 @@ const HomeChat = (props: HomeChatProps) => {
     return (
         <>
             <HeaderMegaMenu ></HeaderMegaMenu>
-            <ChatMessages></ChatMessages>
+            <ChatMessages ws={socket}></ChatMessages>
+            <div
+                className="fixed inset-x-0 bottom-0"
+            >
+                <SendMessages ws={socket}></SendMessages>
+            </div>
+            
         </>
     )
 }
