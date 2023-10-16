@@ -13,7 +13,7 @@ const ChatMessages = (props: ChatMessagesProps) => {
     const [messages, setMessages] = useState<any[]>([])
 
     useEffect(() => {
-        if (props.ws != null) {
+        if (props.ws) {
             props.ws.onmessage = (event) => {
                 console.log(event.data)
                 setMessages(messages => [...messages, event.data])

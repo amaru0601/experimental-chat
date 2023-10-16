@@ -11,29 +11,28 @@ import { authOptions } from './api/auth/[...nextauth]/route';
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Chat',
-  description: 'Developed by Amaru',
+    title: 'Chat',
+    description: 'Developed by Amaru',
 }
 
 export default async function RootLayout({
-  children,
+    children,
 }: {
-  children: React.ReactNode
+    children: React.ReactNode
 }) {
-  const session = await getServerSession(authOptions)
-
-  return (
-    <html lang="en">
-      <head>
-        <ColorSchemeScript defaultColorScheme='auto'/>
-      </head>
-      <body className={inter.className}>
-        <MantineProvider defaultColorScheme='auto'>
-          <Provider session={session}>
-          {children}
-          </Provider>
-        </MantineProvider>
-      </body>
-    </html>
-  )
+    const session = await getServerSession(authOptions)
+    return (
+        <html lang="en">
+            <head>
+                <ColorSchemeScript defaultColorScheme='auto' />
+            </head>
+            <body className={inter.className}>
+                <MantineProvider defaultColorScheme='auto'>
+                    <Provider session={session}>
+                        {children}
+                    </Provider>
+                </MantineProvider>
+            </body>
+        </html>
+    )
 }

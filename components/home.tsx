@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import { HeaderMegaMenu } from "./header";
 import ChatMessages  from "./chat";
-import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
 import SendMessages from "./send";
 
 interface Chat {
@@ -16,12 +14,6 @@ interface HomeChatProps {
 }
 
 const HomeChat = (props: HomeChatProps) => {
-    const { data: session } = useSession()
-    
-    console.log("HOMECHAT", session)
-    if (session == null) {
-        redirect('/login')
-    }
 
     const [socket, setSocket] = useState<WebSocket | null>(null)
 
@@ -54,7 +46,7 @@ const HomeChat = (props: HomeChatProps) => {
 
     return (
         <>
-            <HeaderMegaMenu ></HeaderMegaMenu>
+            <HeaderMegaMenu></HeaderMegaMenu>
             <ChatMessages ws={socket}></ChatMessages>
             <div
                 className="fixed inset-x-0 bottom-0"

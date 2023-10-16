@@ -14,9 +14,12 @@ import classes from './header.module.css';
 import { useRouter } from 'next/navigation';
 import { signOut } from 'next-auth/react';
 
+interface HeaderProps {
+    chats?: Chat[] | null
+    setChat?: (chatId: number) => void
+}
 
-
-export function HeaderMegaMenu() {
+export function HeaderMegaMenu(props: HeaderProps) {
     const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
     const router = useRouter()
     
@@ -55,7 +58,12 @@ export function HeaderMegaMenu() {
                 <ScrollArea h={`calc(100vh - ${rem(80)})`} mx="-md">
 
                     <Divider my="sm" />
-
+                    {
+                        props?.chats?.map( e => 
+                        <Group key={e.id} justify="center" grow pb="xl" px="md">
+                            <Button key={e.id} onClick={() => props.setChat?.(e.id)}>{e.sender}</Button>
+                        </Group>) 
+                    }
                     <Group justify="center" grow pb="xl" px="md">
                         <Button variant="default" onClick={handleLogout}>Logout</Button>
                     </Group>

@@ -1,7 +1,14 @@
 import NextAuth, { AuthOptions, User, Session } from "next-auth"
 import { JWT } from "next-auth/jwt"
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import CredentialsProvider from "next-auth/providers/credentials"
 import { cookies } from "next/headers"
+
+
+interface JWTPayload {
+    username: string,
+    exp: number
+}
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -11,7 +18,9 @@ export const authOptions: AuthOptions = {
                 username: { label: "Username", type: "text" },
                 password: { label: "Password", type: "password" }
             },
-            async authorize(credentials, req) {
+            
+         async authorize(credentials, req) {
+                console.log("AUTHNEXT", req)
                 const res = await fetch('http://localhost:8080/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -19,12 +28,12 @@ export const authOptions: AuthOptions = {
                 })
                 const data = await res.json()
                 if (res.ok && data) {
-                    console.log("AUTHNEXT", data)
                     cookies().set('token', data, {
                         httpOnly: true,
                     })
-                    var user = { id: data }
-                    return user
+                    return {
+                        id: data,
+                    }
                 }
                 return null
             },
@@ -46,8 +55,10 @@ export const authOptions: AuthOptions = {
             return token;
         },
         session: async ({ session, token }: { session: Session; token: JWT }) => {
+            const payload = jwt.decode(token.name!) as JWTPayload
+
             session.user = {
-                name: token.name,
+                name: payload.username,
             }
             return session;
         },
