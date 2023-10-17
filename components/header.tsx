@@ -60,11 +60,11 @@ export function HeaderMegaMenu(props: HeaderProps) {
                     <Divider my="sm" />
                     {
                         props?.chats?.map( e => 
-                        <Group key={e.id} justify="center" grow pb="xl" px="md">
+                        <Group key={'g'+e.id} justify="center" grow pb="xl" px="md">
                             <Button key={e.id} onClick={() => props.setChat?.(e.id)}>{e.sender}</Button>
                         </Group>) 
                     }
-                    <Group justify="center" grow pb="xl" px="md">
+                    <Group key={'0'} justify="center" grow pb="xl" px="md">
                         <Button variant="default" onClick={handleLogout}>Logout</Button>
                     </Group>
                 </ScrollArea>
